@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Park.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Park.Controllers
 {
@@ -21,7 +22,7 @@ namespace Park.Controllers
             return _db.PublicParks.ToList();
         }
         [HttpPost]
-        public void Post ([FromBody] PublicPark publicpark)
+        public void Post([FromBody] PublicPark publicpark)
         {
             _db.PublicParks.Add(publicpark);
             _db.SaveChanges();
@@ -30,6 +31,13 @@ namespace Park.Controllers
         public ActionResult<PublicPark> Get(int id)
         {
             return _db.PublicParks.FirstOrDefault(entry => entry.PublicParkId == id);
+        }
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] PublicPark publicPark)
+        {
+            publicPark.PublicParkId =id;
+            _db.Entry(publicPark).State = EntityState.Modified;
+            _db.SaveChanges();
         }
     }
 }
